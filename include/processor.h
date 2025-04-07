@@ -7,6 +7,8 @@ class Processor {
 
   // TODO: Declare any necessary private members
  private:
+  long prev_total{0};
+  long prev_active{0};
 };
 
 #endif

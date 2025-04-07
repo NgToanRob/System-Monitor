@@ -58,8 +58,8 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
   int const pid_column{2};
   int const user_column{9};
   int const cpu_column{16};
-  int const ram_column{26};
-  int const time_column{35};
+  int const ram_column{24};
+  int const time_column{36};
   int const command_column{46};
   wattron(window, COLOR_PAIR(2));
   mvwprintw(window, ++row, pid_column, "PID");
@@ -70,10 +70,10 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
   mvwprintw(window, row, command_column, "COMMAND");
   wattroff(window, COLOR_PAIR(2));
   for (int i = 0; i < n; ++i) {
-    //You need to take care of the fact that the cpu utilization has already been multiplied by 100.
     // Clear the line
-    mvwprintw(window, ++row, pid_column, (string(window->_maxx-2, ' ').c_str()));
-    
+    int max_x = getmaxx(window);  // Use getmaxx to get the width of the window
+    mvwprintw(window, ++row, pid_column, "%s", string(max_x - 2, ' ').c_str());
+
     mvwprintw(window, row, pid_column, "%s", to_string(processes[i].Pid()).c_str());
     mvwprintw(window, row, user_column, "%s", processes[i].User().c_str());
     float cpu = processes[i].CpuUtilization() * 100;
@@ -82,8 +82,8 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
     mvwprintw(window, row, time_column, "%s",
               Format::ElapsedTime(processes[i].UpTime()).c_str());
     mvwprintw(window, row, command_column, "%s",
-              processes[i].Command().substr(0, window->_maxx - 46).c_str());
-  }
+              processes[i].Command().substr(0, max_x - command_column).c_str());
+}
 }
 
 void NCursesDisplay::Display(System& system, int n) {
@@ -95,7 +95,7 @@ void NCursesDisplay::Display(System& system, int n) {
   int x_max{getmaxx(stdscr)};
   WINDOW* system_window = newwin(9, x_max - 1, 0, 0);
   WINDOW* process_window =
-      newwin(3 + n, x_max - 1, system_window->_maxy + 1, 0);
+    newwin(3 + n, x_max - 1, getmaxy(system_window) + 1, 0);  // Use getmaxy
 
   while (1) {
     init_pair(1, COLOR_BLUE, COLOR_BLACK);
