@@ -3,7 +3,6 @@
 This is a side project I created based on the System Monitor Project in the Object Oriented Programming Course of the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213).
 
 ![System Monitor](images/monitor.png)
-![Project Structure](images/project_structure.png)
 
 ## Udacity Linux Workspace
 [Udacity](https://www.udacity.com/) provides a browser-based Linux [Workspace](https://engineering.udacity.com/creating-a-gpu-enhanced-virtual-desktop-for-udacity-497bdd91a505) for students. 
@@ -42,6 +41,8 @@ This project uses [Make](https://www.gnu.org/software/make/). The Makefile has f
 ## Data flow
 
 The following is an explanation of the program's **data flow** based on the provided structure and components:
+
+![Project Structure](images/project_structure.png)
 
 ---
 
