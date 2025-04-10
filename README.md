@@ -1,10 +1,9 @@
 # CppND-System-Monitor
 
-Starter code for System Monitor Project in the Object Oriented Programming Course of the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). 
-
-Follow along with the classroom lesson to complete the project!
+This is a side project I created based on the System Monitor Project in the Object Oriented Programming Course of the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213).
 
 ![System Monitor](images/monitor.png)
+![Project Structure](images/project_structure.png)
 
 ## Udacity Linux Workspace
 [Udacity](https://www.udacity.com/) provides a browser-based Linux [Workspace](https://engineering.udacity.com/creating-a-gpu-enhanced-virtual-desktop-for-udacity-497bdd91a505) for students. 
@@ -32,7 +31,6 @@ This project uses [Make](https://www.gnu.org/software/make/). The Makefile has f
 2. Build the project: `make build`
 
 3. Run the resulting executable: `./build/monitor`
-![Starting System Monitor](images/starting_monitor.png)
 
 4. Follow along with the lesson.
 
@@ -42,112 +40,113 @@ This project uses [Make](https://www.gnu.org/software/make/). The Makefile has f
 
 
 ## Data flow
-Dưới đây là giải thích về **data flow** (luồng dữ liệu) của chương trình dựa trên cấu trúc và các thành phần đã được cung cấp:
+
+The following is an explanation of the program's **data flow** based on the provided structure and components:
 
 ---
 
-### **1. Khởi tạo chương trình**
+### **1. Program Initialization**
 - **`main()`**:
-  - Chương trình bắt đầu từ hàm `main()`.
-  - Trong `main()`, các đối tượng chính được khởi tạo:
-    - **`System`**: Quản lý toàn bộ thông tin hệ thống.
-    - **`NCursesDisplay`**: Hiển thị thông tin hệ thống lên giao diện dòng lệnh.
-  - `NCursesDisplay::Display()` được gọi để bắt đầu hiển thị thông tin.
+  - The program starts from the `main()` function.
+  - In `main()`, the main objects are initialized:
+    - **`System`**: Manages all system information.
+    - **`NCursesDisplay`**: Displays system information on the command-line interface.
+  - `NCursesDisplay::Display()` is called to start displaying information.
 
 ---
 
-### **2. Lấy dữ liệu từ hệ thống**
+### **2. Retrieving Data from the System**
 - **`System`**:
-  - Lớp `System` chịu trách nhiệm lấy dữ liệu từ hệ thống thông qua `LinuxParser`.
-  - Các phương thức trong `System` gọi các hàm tương ứng trong `LinuxParser` để lấy thông tin:
-    - **CPU**: `LinuxParser::CpuUtilization()` trả về mức sử dụng CPU.
-    - **Bộ nhớ**: `LinuxParser::MemoryUtilization()` trả về mức sử dụng bộ nhớ.
-    - **Thời gian hoạt động**: `LinuxParser::UpTime()` trả về thời gian hoạt động của hệ thống.
-    - **Tiến trình**:
-      - `LinuxParser::Pids()` trả về danh sách các PID (Process IDs).
-      - `LinuxParser::Command()`, `LinuxParser::Ram()`, `LinuxParser::User()`, v.v., trả về thông tin chi tiết của từng tiến trình.
-    - **Hệ điều hành và kernel**:
-      - `LinuxParser::OperatingSystem()` trả về tên hệ điều hành.
-      - `LinuxParser::Kernel()` trả về phiên bản kernel.
+  - The `System` class is responsible for retrieving data from the system through `LinuxParser`.
+  - Methods in `System` call the corresponding functions in `LinuxParser` to retrieve information:
+    - **CPU**: `LinuxParser::CpuUtilization()` returns CPU utilization.
+    - **Memory**: `LinuxParser::MemoryUtilization()` returns memory utilization.
+    - **Uptime**: `LinuxParser::UpTime()` returns the system's uptime.
+    - **Processes**:
+      - `LinuxParser::Pids()` returns a list of PIDs (Process IDs).
+      - `LinuxParser::Command()`, `LinuxParser::Ram()`, `LinuxParser::User()`, etc., return detailed information for each process.
+    - **Operating System and Kernel**:
+      - `LinuxParser::OperatingSystem()` returns the operating system name.
+      - `LinuxParser::Kernel()` returns the kernel version.
 
 ---
 
-### **3. Xử lý dữ liệu**
+### **3. Data Processing**
 - **`Processor`**:
-  - Lớp `Processor` xử lý thông tin liên quan đến CPU, như tính toán mức sử dụng CPU dựa trên dữ liệu từ `LinuxParser`.
+  - The `Processor` class processes CPU-related information, such as calculating CPU utilization based on data from `LinuxParser`.
 - **`Process`**:
-  - Mỗi tiến trình được đại diện bởi một đối tượng `Process`.
-  - `Process` lấy thông tin chi tiết của từng tiến trình từ `LinuxParser` (như PID, RAM, CPU utilization, thời gian hoạt động, v.v.).
+  - Each process is represented by a `Process` object.
+  - `Process` retrieves detailed information for each process from `LinuxParser` (such as PID, RAM, CPU utilization, uptime, etc.).
 - **`System`**:
-  - Lớp `System` tổng hợp dữ liệu từ `Processor`, danh sách `Process`, và các thông tin khác (bộ nhớ, thời gian hoạt động, v.v.).
+  - The `System` class aggregates data from `Processor`, the `Process` list, and other information (memory, uptime, etc.).
 
 ---
 
-### **4. Hiển thị dữ liệu**
+### **4. Data Display**
 - **`NCursesDisplay`**:
-  - Lớp `NCursesDisplay` chịu trách nhiệm hiển thị dữ liệu lên giao diện dòng lệnh.
-  - Gồm hai phần chính:
+  - The `NCursesDisplay` class is responsible for displaying data on the command-line interface.
+  - It consists of two main parts:
     1. **`DisplaySystem()`**:
-       - Hiển thị thông tin tổng quan về hệ thống, như:
-         - Tên hệ điều hành.
-         - Phiên bản kernel.
-         - Mức sử dụng CPU và bộ nhớ (dưới dạng thanh tiến trình).
-         - Tổng số tiến trình và số tiến trình đang chạy.
-         - Thời gian hoạt động của hệ thống.
+       - Displays general system information, such as:
+         - Operating system name.
+         - Kernel version.
+         - CPU and memory utilization (as progress bars).
+         - Total number of processes and number of running processes.
+         - System uptime.
     2. **`DisplayProcesses()`**:
-       - Hiển thị danh sách các tiến trình, bao gồm:
+       - Displays a list of processes, including:
          - PID.
-         - Tên người dùng.
-         - Mức sử dụng CPU.
+         - Username.
+         - CPU utilization.
          - RAM.
-         - Thời gian hoạt động.
-         - Lệnh được thực thi.
-  - `NCursesDisplay` liên tục cập nhật dữ liệu từ `System` và hiển thị thông tin theo thời gian thực.
+         - Uptime.
+         - Command being executed.
+  - `NCursesDisplay` continuously updates data from `System` and displays information in real-time.
 
 ---
 
-### **Tóm tắt luồng dữ liệu**
-1. **Dữ liệu từ hệ thống**:
-   - `LinuxParser` đọc dữ liệu từ các file hệ thống trong proc (ví dụ: stat, meminfo, `/proc/[PID]/status`, v.v.).
-2. **Xử lý dữ liệu**:
-   - `System` và các thành phần con (`Processor`, `Process`) xử lý và lưu trữ dữ liệu.
-3. **Hiển thị dữ liệu**:
-   - `NCursesDisplay` lấy dữ liệu từ `System` và hiển thị lên giao diện dòng lệnh.
+### **Data Flow Summary**
+1. **Data from the System**:
+   - `LinuxParser` reads data from system files in proc (e.g., stat, meminfo, `/proc/[PID]/status`, etc.).
+2. **Data Processing**:
+   - `System` and its child components (`Processor`, `Process`) process and store the data.
+3. **Data Display**:
+   - `NCursesDisplay` retrieves data from `System` and displays it on the command-line interface.
 
 ---
 
-### **Luồng dữ liệu trực quan**
+### **Visual Data Flow**
 1. **`LinuxParser`**:
-   - Lấy dữ liệu từ proc.
+   - Retrieves data from proc.
 2. **`System`**:
-   - Gọi `LinuxParser` để lấy dữ liệu.
-   - Quản lý CPU (`Processor`) và danh sách tiến trình (`Process`).
+   - Calls `LinuxParser` to retrieve data.
+   - Manages CPU (`Processor`) and the process list (`Process`).
 3. **`NCursesDisplay`**:
-   - Gọi `System` để lấy dữ liệu.
-   - Hiển thị thông tin hệ thống và tiến trình.
+   - Calls `System` to retrieve data.
+   - Displays system and process information.
 
 ---
 
-### **Ví dụ cụ thể**
-- **Mức sử dụng CPU**:
-  1. `NCursesDisplay` gọi `System::Cpu()`.
-  2. `System::Cpu()` trả về đối tượng `Processor`.
-  3. `Processor` gọi `LinuxParser::CpuUtilization()` để lấy dữ liệu từ stat.
-  4. `Processor` tính toán mức sử dụng CPU và trả về kết quả.
-  5. `NCursesDisplay` hiển thị mức sử dụng CPU dưới dạng thanh tiến trình.
+### **Specific Example**
+- **CPU Utilization**:
+  1. `NCursesDisplay` calls `System::Cpu()`.
+  2. `System::Cpu()` returns a `Processor` object.
+  3. `Processor` calls `LinuxParser::CpuUtilization()` to retrieve data from stat.
+  4. `Processor` calculates CPU utilization and returns the result.
+  5. `NCursesDisplay` displays CPU utilization as a progress bar.
 
-- **Danh sách tiến trình**:
-  1. `NCursesDisplay` gọi `System::Processes()`.
-  2. `System::Processes()` trả về danh sách các đối tượng `Process`.
-  3. Mỗi `Process` gọi `LinuxParser` để lấy thông tin chi tiết (PID, RAM, CPU, v.v.).
-  4. `NCursesDisplay` hiển thị danh sách tiến trình.
+- **Process List**:
+  1. `NCursesDisplay` calls `System::Processes()`.
+  2. `System::Processes()` returns a list of `Process` objects.
+  3. Each `Process` calls `LinuxParser` to retrieve detailed information (PID, RAM, CPU, etc.).
+  4. `NCursesDisplay` displays the process list.
 
 ---
 
-### **Kết luận**
-Luồng dữ liệu của chương trình được thiết kế theo mô hình phân lớp:
-- **`LinuxParser`**: Lấy dữ liệu từ hệ thống.
-- **`System`**: Quản lý và xử lý dữ liệu.
-- **`NCursesDisplay`**: Hiển thị dữ liệu lên giao diện dòng lệnh.
+### **Conclusion**
+The program's data flow is designed following a layered model:
+- **`LinuxParser`**: Retrieves data from the system.
+- **`System`**: Manages and processes data.
+- **`NCursesDisplay`**: Displays data on the command-line interface.
 
-Cách tổ chức này giúp chương trình dễ bảo trì, mở rộng và tái sử dụng.
+This organization makes the program easy to maintain, extend, and reuse.
