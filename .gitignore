@@ -1,7 +1,1 @@
-monitor
-a.out
-settings.json
-*.o
-build/*
-*.json
-.github/**
+monitor\na.out\nsettings.json\n*.o\nbuild/*\n*.json\n.github/**
